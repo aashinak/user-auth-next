@@ -10,7 +10,8 @@ export async function POST(req: NextRequest) {
     try {
         const reqBody = await req.json()
         const { email, password } = reqBody
-        const user = await User.findOne({ email: email, isVerified: {$eq: true} })
+        const user = await User.findOne({ email: email })
+        // const user = await User.findOne({ email: email, isVerified: {$eq: true} })
         if (!user) {
             return NextResponse.json({error: "Invalid email"},{status: 400})
         }

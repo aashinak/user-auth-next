@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
         // get token from request body
         const reqBody = await req.json()
         const { token } = reqBody
-        console.log(`token from verifyEmail route ${token}`);
         // check if a user exist with the token and within time of expiry
         const user = await User.findOne(
             { verificationToken: token, verificationTokenExpiry: { $gt: Date.now() } }
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({error: "Invalid token"},{status: 400})
         }
         // if there is a user set verification true and some clean up then save the updated user info
-        console.log(`from verifyEmail route ${user}`);
         user.isVerified = true
         user.verificationToken = undefined
         user.verificationTokenExpiry = undefined

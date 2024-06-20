@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import mongoose from 'mongoose'
+import { type } from 'os'
 
 const userSchema = new Schema({
     userName: {
@@ -15,7 +16,10 @@ const userSchema = new Schema({
         type: String,
         required: [true, "Please provide password"]
     },
-    isVerified: Boolean,
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     isAdmin: Boolean,
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date,

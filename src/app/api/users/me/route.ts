@@ -7,9 +7,10 @@ import { NextRequest, NextResponse } from 'next/server'
 connect()
 
 export async function GET(req: NextRequest) {
+    
     try {
-        const userId = await getDataFromToken(req)
-        const user = await User.findById({ userId }).select("-password")
+        const userId = await getDataFromToken(req)        
+        const user = await User.findById(userId).select("-password")
         if (!user) {
             return NextResponse.json({error: "User not found"},{status: 400})
         }

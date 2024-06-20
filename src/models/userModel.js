@@ -3,23 +3,23 @@ import mongoose from 'mongoose'
 
 const userSchema = new Schema({
     userName: {
-        type: string,
+        type: String,
         required: [true, "Please provide username"],
     },
     email: {
-        type: string,
+        type: String,
         required: [true, "Please provide email"],
         unique: true,
     },
     password: {
-        type: string,
+        type: String,
         required: [true, "Please provide password"]
     },
     isVerified: Boolean,
     isAdmin: Boolean,
-    forgotPasswordToken: string,
+    forgotPasswordToken: String,
     forgotPasswordExpiry: Date,
-    verificationToken: string,
+    verificationToken: String,
     verificationTokenExpiry: Date,
 })
 

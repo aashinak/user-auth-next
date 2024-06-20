@@ -3,16 +3,18 @@ import nodemailer from 'nodemailer'
 import bcryptjs from "bcryptjs";
 
 export const sendEmail = async ({email, emailType, userId}: any) => {
-    //TODO: add usage later
-    
-
     try {
+        // creating hashed token for verification
         const hashedToken = await bcryptjs.hash(userId.toString(), 10)
         if (emailType === "VERIFY") {
-            await User.findByIdAndUpdate(userId, { verificationToken: hashedToken, verificationTokenExpiry: Date.now() + 3600000 }) 
+            await User.findByIdAndUpdate(userId,
+                { verificationToken: hashedToken, verificationTokenExpiry: Date.now() + 3600000 }) 
         } else if (emailType === "RESET") {
-            await User.findByIdAndUpdate(userId, { forgotPasswordToken: hashedToken, forgotPasswordExpiry: Date.now() + 3600000 }) 
+            await User.findByIdAndUpdate(userId,
+                { forgotPasswordToken: hashedToken, forgotPasswordExpiry: Date.now() + 3600000 }) 
         }
+
+        // functions for mail transport (used nodemailer with mailtrap)
         var transport = nodemailer.createTransport({
             host: "sandbox.smtp.mailtrap.io",
             port: 2525,
@@ -20,15 +22,16 @@ export const sendEmail = async ({email, emailType, userId}: any) => {
               user: "892e05aa30bc09",
               pass: "660fe83850ebfa"
             }
-          });
+        });
+        // payload that sent to user
         const mailOptions = {
-            from: 'aash@gmail.com', // sender address
+            from: 'aash@dev.ai', // sender address
             to: email, // list of receivers
             subject: emailType === "VERIFY" ? "Email Verification" : "Reset Password", // Subject line
-            html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to 
+            html: `<p>Click <a href="${process.env.DOMAIN}/verifyEmail?token=${hashedToken}">here</a> to 
             ${emailType === "VERIFY" ? "verify your email" : "reset your password"} 
             or copy paste the link in a browser <br>
-            ${process.env.DOMAIN}/verifyemail?token=${hashedToken}
+            ${process.env.DOMAIN}/verifyEmail?token=${hashedToken}
             <p>`, // html body
         }
         const mailResponse = await transport.sendMail(mailOptions)
